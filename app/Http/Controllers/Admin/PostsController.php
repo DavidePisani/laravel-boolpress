@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Post;
+use Illuminate\Support\Str;
 
 
 class PostsController extends Controller
@@ -61,7 +62,7 @@ class PostsController extends Controller
             $count++;
         }
 
-        $new_post -> slag = $slug_to_save;
+        $new_post -> slug = $slug_to_save;
         $new_post -> save();
 
         return redirect()->route('admin.posts.show', ['post' => $new_post->id]);
