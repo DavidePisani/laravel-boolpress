@@ -2,7 +2,7 @@
 
 @section('content')
 
-<h1>Crea nuovo post</h1>
+<h1>Modifica post</h1>
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -12,16 +12,19 @@
             </ul>
         </div>
     @endif
-    <form action="{{route('admin.posts.store')}}" method="POST">
+    <form action="{{route('admin.posts.update', ['post' => $post->id ])}}" method="POST">
         @csrf
+        @method('PUT')
         <div class="mb-3">
             <label for="title" class="form-label">Titolo</label>
-            <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}">
+            <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $post->title) }}">
         </div>
         <div class="mb-3">
             <label for="content" class="form-label">Contenuto</label>
-            <textarea class="form-control" id="content" name="content" rows="6">{{ old('content') }}</textarea>
+            <textarea class="form-control" id="content" name="content" rows="6">{{ old('content', $post->content) }}</textarea>
         </div>
-        <input class="btn btn-primary" type="submit" value="Crea">
+
+        <input class="btn btn-primary" type="submit" value="Salva">
+        
     </form>
 @endsection

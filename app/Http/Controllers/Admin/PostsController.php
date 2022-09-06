@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Post;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 
 class PostsController extends Controller
@@ -15,12 +16,16 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $post = Post::all();
-
+        $posts = Post::all();
+        $request_info= $request->all();
+        $deleted_message = isset($request_info['deleted']) ? $request_info['deleted'] : null;
+        
+        $this->getDifferentDay($posts);
         $data = [
-            'posts'=> $post
+            'posts'=> $posts,
+            'deleted_message' => $deleted_message,
         ];
 
         return view('admin.posts.index', $data);
@@ -50,19 +55,7 @@ class PostsController extends Controller
         $new_post = new Post();
         $new_post -> fill($form_data);
 
-        $slug_to_save = Str::slug($new_post->title, '-');
-        $slug_base = $slug_to_save;
-
-        $exsisting_slug = Post::where('slug', '=',  $slug_to_save)->first();
-
-        $count = 1;
-        while ($exsisting_slug) {
-            $slug_to_save = $slug_base . '-' . $count;
-            $exsisting_slug = Post::where('slug', '=',  $slug_to_save)->first();
-            $count++;
-        }
-
-        $new_post -> slug = $slug_to_save;
+        $new_post->slug = $this->getSlug($new_post->title);
         $new_post -> save();
 
         return redirect()->route('admin.posts.show', ['post' => $new_post->id]);
@@ -78,6 +71,7 @@ class PostsController extends Controller
     public function show($id)
     {
         $post = Post::findOrFail($id);
+        $now = Carbon::now();
 
         $data = [
             'post'=> $post
@@ -92,10 +86,16 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public function edit($id){
+        $post = Post::findOrFail($id);
+
+        $data = [
+            'post'=> $post
+        ];
+
+        return view('admin.posts.edit', $data);
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -106,7 +106,20 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate($this->getValidation());
+        $form_data = $request->all();
+        $post_to_update = Post::findOrFail($id);
+
+
+       if ($form_data['title'] !== $post_to_update->title) {
+        $form_data['slug'] = $this->getSlug($form_data['title']);
+       }else{
+        $form_data['slug'] = $post_to_update->slug;
+       }
+       
+       $post_to_update->update($form_data);
+    
+       return redirect()-> route('admin.posts.show', ['post' => $post_to_update->id]);
     }
 
     /**
@@ -117,7 +130,12 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        {
+            $delete_post = Post::findOrFail($id);
+            $delete_post->delete();
+    
+            return redirect()->route('admin.posts.index', ['deleted'=> 'yes']);    
+        }
     }
 
     protected function getValidation() {
@@ -125,5 +143,28 @@ class PostsController extends Controller
             'title' => 'required|max:255',
             'content' => 'required|max:60000',
         ];
+    }
+
+    protected function getSlug($title){
+
+        $slug_to_save = Str::slug($title, '-');
+        $slug_base = $slug_to_save;
+
+        $exsisting_slug = Post::where('slug', '=',  $slug_to_save)->first();
+
+        $count = 1;
+        while ($exsisting_slug) {
+            $slug_to_save = $slug_base . '-' . $count;
+            $exsisting_slug = Post::where('slug', '=',  $slug_to_save)->first();
+            $count++;
+        }
+        return $slug_to_save; 
+    }
+
+    protected function getDifferentDay($posts){
+        $today = Carbon::now();
+        foreach($posts as $post){
+            $post['updated_days_ago'] = $post -> updated_at-> diffInDays($today);
+        }
     }
 }
