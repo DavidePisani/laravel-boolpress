@@ -2,6 +2,7 @@
 @section('content')
 
     <h1>{{$post->title}}</h1>
+    <h3>Categoria: {{ $post->category ? $post->category->name : 'Nessuna' }}</h3>
     <div>Data creazine: {{$post->created_at->format('D d-m-Y')}}</div>
     <div>Ultimo aggiornamento: {{$post->updated_at->format('D d-m-Y / H.i' )}}</div>
     <div>Slug: {{$post->slug}}</div>

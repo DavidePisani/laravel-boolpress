@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Post;
+use App\Category;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
@@ -38,7 +39,12 @@ class PostsController extends Controller
      */
     public function create()
     {
-      return view('admin.posts.create');
+        $categories = Category::all();
+        $data=[
+            'categories' => $categories
+        ];
+
+        return view('admin.posts.create', $data);
     }
 
     /**
@@ -88,9 +94,11 @@ class PostsController extends Controller
      */
     public function edit($id){
         $post = Post::findOrFail($id);
+        $categories = Category::all();
 
         $data = [
-            'post'=> $post
+            'post'=> $post,
+            'categories' => $categories
         ];
 
         return view('admin.posts.edit', $data);
@@ -142,6 +150,7 @@ class PostsController extends Controller
         return [
             'title' => 'required|max:255',
             'content' => 'required|max:60000',
+            'category_id' => 'nullable|exists:categories,id' 
         ];
     }
 

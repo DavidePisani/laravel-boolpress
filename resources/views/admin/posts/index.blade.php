@@ -16,7 +16,8 @@
                 <div class="card">
                     {{-- <img src="..." class="card-img-top" alt="..."> --}}
                     <div class="card-body">
-                      <h5 class="card-title">{{$post->title}}</h5>
+                      <h4 class="card-title">{{$post->title}}</h4>
+                      <h5>Categoria: {{ $post->category ? $post->category->name : 'Nessuna' }}</h5>
                       @if ($post->updated_days_ago > 0)
                       <div> Aggiornato: {{$post->updated_days_ago}} giorn{{$post->updated_days_ago > 1 ? 'i' : 'o' }} fa</div>
                       @endif
