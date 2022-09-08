@@ -8,6 +8,19 @@
     <div>Slug: {{$post->slug}}</div>
     <h2>Contenuto:</h2>
     <p>{{$post->content}}</p>
+    <div class="mb-4">
+        Tags: 
+        <div class="badge bg-primary ml-1">
+            @if ($post->tags->isNotEmpty())
+            @foreach ($post->tags as $tag)
+                {{ $tag->name }}{{!$loop->last ? ' - ' : ''}}
+            @endforeach
+        
+            @else
+                nessun Tag
+            @endif
+        </div>
+    </div>
 
     <div class="d-flex">
         <a class="btn btn-primary mr-3" href="{{ route('admin.posts.edit', ['post' => $post->id]) }}"> Modifica post</a>

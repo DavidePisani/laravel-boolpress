@@ -20,6 +20,41 @@
             <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $post->title) }}">
         </div>
 
+        <h5>Tags</h5>
+        <div class="mb-3 d-flex ">
+           
+            @if ($errors->any())
+                @foreach ($tags as $tag)
+                    <div class="form-check pr-2">
+                        <input class="form-check-input " 
+                        type="checkbox" 
+                        value="{{$tag->id}}" 
+                        id="tag-{{$tag->id}}"
+                        name="tags[]"
+                        {{in_array($tag->id, old('tags', [])) ? 'checked' : ''}}>
+
+                        <label class="form-check-label" for="tag-{{$tag->id}}">
+                            {{$tag->name}}
+                        </label>
+                    </div>     
+                @endforeach
+            @else
+                @foreach ($tags as $tag)
+                    <div class="form-check pr-2">
+                        <input class="form-check-input " 
+                        type="checkbox" 
+                        value="{{$tag->id}}" 
+                        id="tag-{{$tag->id}}"
+                        name="tags[]"
+                        {{$post->tags->contains($tag) ? 'checked' : ''}}>
+                        <label class="form-check-label" for="tag-{{$tag->id}}">
+                            {{$tag->name}}
+                        </label>
+                    </div>  
+                @endforeach
+            @endif
+        </div>
+
         <div class="mb-3">
             <label for="category_id">Categoria</label>
             <select class="form-select" id="category_id" name="category_id">
@@ -35,7 +70,6 @@
             <textarea class="form-control" id="content" name="content" rows="6">{{ old('content', $post->content) }}</textarea>
         </div>
 
-        <input class="btn btn-primary" type="submit" value="Salva">
-        
+        <input class="btn btn-primary" type="submit" value="Salva"> 
     </form>
 @endsection

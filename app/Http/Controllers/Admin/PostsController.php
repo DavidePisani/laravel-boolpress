@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Post;
 use App\Category;
+use App\Tag;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
@@ -40,8 +41,10 @@ class PostsController extends Controller
     public function create()
     {
         $categories = Category::all();
+        $tags = Tag::all();
         $data=[
-            'categories' => $categories
+            'categories' => $categories,
+            'tags' => $tags
         ];
 
         return view('admin.posts.create', $data);
@@ -62,7 +65,12 @@ class PostsController extends Controller
         $new_post -> fill($form_data);
 
         $new_post->slug = $this->getSlug($new_post->title);
-        $new_post -> save();
+        $new_post->save();
+    
+
+        if(isset($form_data['tags'])){
+            $new_post->tags()->sync($form_data['tags']);
+        }
 
         return redirect()->route('admin.posts.show', ['post' => $new_post->id]);
 
@@ -95,10 +103,11 @@ class PostsController extends Controller
     public function edit($id){
         $post = Post::findOrFail($id);
         $categories = Category::all();
-
+        $tags = Tag::all();
         $data = [
             'post'=> $post,
-            'categories' => $categories
+            'categories' => $categories,
+            'tags' => $tags
         ];
 
         return view('admin.posts.edit', $data);
@@ -126,6 +135,12 @@ class PostsController extends Controller
        }
        
        $post_to_update->update($form_data);
+
+       if(isset($form_data['tags'])){
+            $post_to_update->tags()->sync($form_data['tags']);
+        }else{
+            $post_to_update->tags()->sync([]);
+        }
     
        return redirect()-> route('admin.posts.show', ['post' => $post_to_update->id]);
     }
@@ -140,7 +155,9 @@ class PostsController extends Controller
     {
         {
             $delete_post = Post::findOrFail($id);
+            $delete_post->tags()->sync([]);
             $delete_post->delete();
+           
     
             return redirect()->route('admin.posts.index', ['deleted'=> 'yes']);    
         }
@@ -150,7 +167,8 @@ class PostsController extends Controller
         return [
             'title' => 'required|max:255',
             'content' => 'required|max:60000',
-            'category_id' => 'nullable|exists:categories,id' 
+            'category_id' => 'nullable|exists:categories,id',
+            'tags'=> 'nullable|exists:tags,id' 
         ];
     }
 
