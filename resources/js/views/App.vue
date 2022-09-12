@@ -2,14 +2,19 @@
   <div>
     <div class="container">
         <a href="/admin"> Accedi</a>
-        <h1>Benvenuto nel nostro sito, fatto con VueJs </h1>
+        <Posts/>
     </div>
-    
   </div>
 </template>
 
 <script>
+import Posts from '../components/Posts.vue';
+
 export default {
+  name: 'App', 
+  components:{
+    Posts
+  }
 
 }
 </script>
