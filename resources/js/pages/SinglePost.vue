@@ -32,7 +32,6 @@ export default {
         getSinglePosts(){
             axios.get('/api/posts/' + this.$route.params.slug).then((response) =>{
                 this.post = response.data.results;
-                console.log(this.post)
             });
         }
     },
