@@ -8,7 +8,7 @@ Vue.use(VueRouter)
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import BlogPage from './pages/BlogPage';
-import SinglePage from './pages/SinglePage';
+import SinglePost from './pages/SinglePost';
 import NotFound from './pages/NotFound';
 
 const router = new VueRouter({
@@ -33,9 +33,9 @@ const router = new VueRouter({
         },
 
         {
-            path: '/blog/slug',
-            name: 'sinlge-post',
-            component: SinglePage
+            path: '/blog/:slug',
+            name: 'single-post',
+            component: SinglePost
         },
 
         {

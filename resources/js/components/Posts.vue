@@ -3,14 +3,7 @@
         <h4 class="mt-2">Lista dei post</h4>
     <div class="row row-cols-3">
         <div class="col mt-3" v-for="post in posts" :key="post.id">
-            <div class="card">
-            <!-- <img src="..." class="card-img-top" alt="..."> -->
-                <div class="card-body">
-                    <h5 class="card-title">{{post.title}}</h5>
-                    <p class="card-text">{{cutText(post.content)}}</p>
-                    <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-                </div>
-            </div>
+            <SinglePostComponent :post="post"/>
         </div>
     </div>
     <nav>
@@ -35,8 +28,15 @@
 </template>
 
 <script>
+import SinglePostComponent from './SinglePostComponent.vue';
+
 export default {
-    name: 'Posts',  
+    name: 'Posts', 
+    components:{
+        SinglePostComponent,
+    },
+   
+
     data(){
         return{
             posts: [],
@@ -46,14 +46,6 @@ export default {
     },
 
     methods:{
-        cutText(text){
-            if(text.length > 75){
-               return text.slice(0,75) + '...';
-                
-            }else{
-                return text;
-            }
-        },
 
         getPosts(pageNumber){
              axios.get('/api/posts',{
