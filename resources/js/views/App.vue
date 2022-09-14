@@ -1,19 +1,20 @@
 <template>
   <div>
-    <div class="container">
-        <a href="/admin"> Accedi</a>
-        <Posts/>
-    </div>
+    <PageHeader/>
+    <main>
+        <router-view></router-view>
+    </main>
+    
   </div>
 </template>
 
 <script>
-import Posts from '../components/Posts.vue';
+import PageHeader from '../components/PageHeader.vue';
 
 export default {
   name: 'App', 
   components:{
-    Posts
+    PageHeader
   }
 
 }

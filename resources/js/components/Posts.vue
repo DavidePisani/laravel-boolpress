@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Lista dei post</h1>
+        <h4 class="mt-2">Lista dei post</h4>
     <div class="row row-cols-3">
         <div class="col mt-3" v-for="post in posts" :key="post.id">
             <div class="card">
@@ -15,7 +15,7 @@
     </div>
     <nav>
         <ul class="pagination mt-5 d-flex justify-content-center">
-            <li class="page-item" :class="{'disable': currentPagination == 1 }">
+            <li class="page-item" :class="{'disabled': currentPagination == 1 }">
             <a class="page-link" @click="getPosts(currentPagination - 1)" href="#">Previous</a>
             </li>
 
@@ -23,7 +23,7 @@
                 <a @click="getPosts(pageNumber)" class="page-link"  href="#">{{pageNumber}}</a>
             </li>
              
-            <li class="page-item" :class="{'disable': currentPagination == lastPagination }">
+            <li class="page-item" :class="{'disabled': currentPagination == lastPagination }">
             <a class="page-link" @click="getPosts(currentPagination + 1)" href="#">Next</a>
             </li>
         </ul>
