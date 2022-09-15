@@ -12,7 +12,7 @@
             </ul>
         </div>
     @endif
-    <form action="{{route('admin.posts.update', ['post' => $post->id ])}}" method="POST">
+    <form action="{{route('admin.posts.update', ['post' => $post->id ])}}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="mb-3">
@@ -63,6 +63,11 @@
                 <option value="{{$category->id}}" {{ old('category_id', $post->category_id )  == $category->id   ? 'selected' : '' }}>{{$category->name}}</option>
                 @endforeach                
             </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="image" class="form-label">Immagine</label>
+            <input  class="form-control" type="file" id="image" name="image">
         </div>
 
         <div class="mb-3">

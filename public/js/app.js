@@ -2086,7 +2086,13 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.get('/api/posts/' + this.$route.params.slug).then(function (response) {
-        _this.post = response.data.results;
+        if (response.data.success) {
+          _this.post = response.data.results;
+        } else {
+          _this.$router.push({
+            name: 'notfound'
+          });
+        }
       });
     }
   },
@@ -2456,10 +2462,23 @@ var render = function render() {
       key: tag.id,
       staticClass: "badge bg-primary mr-1"
     }, [_vm._v(" " + _vm._s(tag.name))]);
-  })], 2) : _vm._e(), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.post.content))])]) : _vm._e()]);
+  })], 2) : _vm._e(), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.post.content))])]) : _c("div", [_vm._m(0)])]);
 };
 
-var staticRenderFns = [];
+var staticRenderFns = [function () {
+  var _vm = this,
+      _c = _vm._self._c;
+
+  return _c("div", {
+    staticClass: "d-flex align-items-center"
+  }, [_c("strong", [_vm._v("Loading...")]), _vm._v(" "), _c("div", {
+    staticClass: "spinner-border ml-auto",
+    attrs: {
+      role: "status",
+      "aria-hidden": "true"
+    }
+  })]);
+}];
 render._withStripped = true;
 
 

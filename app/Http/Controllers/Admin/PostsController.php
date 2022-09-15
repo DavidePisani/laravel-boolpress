@@ -8,6 +8,7 @@ use App\Post;
 use App\Category;
 use App\Tag;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 
@@ -60,6 +61,11 @@ class PostsController extends Controller
     {
         $request->validate($this->getValidation());
         $form_data = $request -> all();
+
+        if(isset($form_data['image'])){
+            $img_path = Storage::put('post-covers', $form_data['image']);
+            $form_data['cover'] = $img_path;
+        }
 
         $new_post = new Post();
         $new_post -> fill($form_data);
@@ -127,6 +133,13 @@ class PostsController extends Controller
         $form_data = $request->all();
         $post_to_update = Post::findOrFail($id);
 
+        if(isset($form_data['image'])) {
+            if($post_to_update->cover){
+                Storage::delete($post_to_update->cover);
+            }
+            $img_path = Storage::put('post-covers', $form_data['image']);
+            $form_data['cover'] = $img_path;
+        }
 
        if ($form_data['title'] !== $post_to_update->title) {
         $form_data['slug'] = $this->getSlug($form_data['title']);
@@ -156,9 +169,12 @@ class PostsController extends Controller
         {
             $delete_post = Post::findOrFail($id);
             $delete_post->tags()->sync([]);
+
+            if($delete_post->cover){
+                Storage::delete($post_to_update->cover);
+            }
+
             $delete_post->delete();
-           
-    
             return redirect()->route('admin.posts.index', ['deleted'=> 'yes']);    
         }
     }
@@ -168,7 +184,8 @@ class PostsController extends Controller
             'title' => 'required|max:255',
             'content' => 'required|max:60000',
             'category_id' => 'nullable|exists:categories,id',
-            'tags'=> 'nullable|exists:tags,id' 
+            'tags' => 'nullable|exists:tags,id',
+            'image' => 'image|max:1024|nullable'
         ];
     }
 

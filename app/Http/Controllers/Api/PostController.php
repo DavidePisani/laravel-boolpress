@@ -20,6 +20,10 @@ class PostController extends Controller
     public function show($slug){
         $post = Post::where('slug', '=', $slug)->with(['tags', 'category'])->first();
 
+        if($post->cover){
+            $post->cover = asset('storage/'. $post->cover);
+        }
+        
         if($post){
             $data=[
                 'success'=> true,
