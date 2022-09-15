@@ -2298,7 +2298,13 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body"
-  }, [_c("h5", {
+  }, [_vm.post.cover ? _c("img", {
+    staticClass: "card-img-top",
+    attrs: {
+      src: _vm.post.cover,
+      alt: _vm.post.title
+    }
+  }) : _vm._e(), _vm._v(" "), _c("h5", {
     staticClass: "card-title"
   }, [_vm._v(_vm._s(_vm.post.title))]), _vm._v(" "), _c("p", {
     staticClass: "card-text"
@@ -2457,7 +2463,13 @@ var render = function render() {
 
   return _c("div", {
     staticClass: "container"
-  }, [_vm.post ? _c("div", [_c("h1", [_vm._v(_vm._s(_vm.post.title))]), _vm._v(" "), _vm.post.category ? _c("div", [_vm._v("\n               Categoria: " + _vm._s(_vm.post.category.name) + "\n            ")]) : _vm._e(), _vm._v(" "), _vm.post.tags.length > 0 ? _c("div", [_vm._v("\n                Tag: "), _vm._l(_vm.post.tags, function (tag) {
+  }, [_vm.post ? _c("div", [_c("h1", [_vm._v(_vm._s(_vm.post.title))]), _vm._v(" "), _vm.post.cover ? _c("img", {
+    staticClass: "w-50",
+    attrs: {
+      src: _vm.post.cover,
+      alt: _vm.post.title
+    }
+  }) : _vm._e(), _vm._v(" "), _vm.post.category ? _c("div", [_vm._v("\n               Categoria: " + _vm._s(_vm.post.category.name) + "\n            ")]) : _vm._e(), _vm._v(" "), _vm.post.tags.length > 0 ? _c("div", [_vm._v("\n                Tag: "), _vm._l(_vm.post.tags, function (tag) {
     return _c("span", {
       key: tag.id,
       staticClass: "badge bg-primary mr-1"

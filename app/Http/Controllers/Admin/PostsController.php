@@ -185,7 +185,7 @@ class PostsController extends Controller
             'content' => 'required|max:60000',
             'category_id' => 'nullable|exists:categories,id',
             'tags' => 'nullable|exists:tags,id',
-            'image' => 'image|max:1024|nullable'
+            'image' => 'nullable|file|mimes:jpeg,jpg,bmp,png'
         ];
     }
 
