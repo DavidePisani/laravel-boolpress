@@ -2053,16 +2053,33 @@ __webpack_require__.r(__webpack_exports__);
     return {
       userName: '',
       userEmail: '',
-      userMessage: ''
+      userMessage: '',
+      sending: false,
+      sucsess: false,
+      errors: {}
     };
   },
   methods: {
     sendMessage: function sendMessage() {
-      axios.post("/api/leads?name=".concat(this.userName, "&email=").concat(this.userEmail, "&message=").concat(this.userMessage)).then(function (response) {
-        console.log(response);
-      }); // name: this.userName,
-      // email: this.userEmail,
-      // message: this.userMessage
+      var _this = this;
+
+      axios.post('/api/leads', {
+        name: this.userName,
+        email: this.userEmail,
+        message: this.userMessage
+      }).then(function (response) {
+        if (response.data.success) {
+          _this.success = true;
+          _this.userName = '';
+          _this.userEmail = '';
+          _this.userMessage = '';
+          _this.errors = {};
+          console.log(response.data);
+        } else {
+          _this.errors = response.data.errors;
+          console.log(response.data);
+        }
+      });
     }
   }
 });
@@ -2470,7 +2487,12 @@ var render = function render() {
         _vm.userName = $event.target.value;
       }
     }
-  })]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _vm.errors.name ? _c("div", _vm._l(_vm.errors.name, function (error, index) {
+    return _c("div", {
+      key: index,
+      staticClass: "alert alert-danger"
+    }, [_vm._v("\n                      " + _vm._s(error) + "\n                  ")]);
+  }), 0) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "mb-3"
   }, [_c("label", {
     staticClass: "form-label",
@@ -2498,7 +2520,12 @@ var render = function render() {
         _vm.userEmail = $event.target.value;
       }
     }
-  })]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _vm.errors.email ? _c("div", _vm._l(_vm.errors.email, function (error, index) {
+    return _c("div", {
+      key: index,
+      staticClass: "alert alert-danger"
+    }, [_vm._v("\n                      " + _vm._s(error) + "\n                  ")]);
+  }), 0) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "mb-3"
   }, [_c("label", {
     staticClass: "form-label",
@@ -2526,10 +2553,16 @@ var render = function render() {
         _vm.userMessage = $event.target.value;
       }
     }
-  })]), _vm._v(" "), _c("input", {
+  }), _vm._v(" "), _vm.errors.message ? _c("div", _vm._l(_vm.errors.message, function (error, index) {
+    return _c("div", {
+      key: index,
+      staticClass: "alert alert-danger"
+    }, [_vm._v("\n                      " + _vm._s(error) + "\n                  ")]);
+  }), 0) : _vm._e()]), _vm._v(" "), _c("input", {
     staticClass: "btn btn-primary",
     attrs: {
-      type: "submit"
+      type: "submit",
+      disabled: _vm.sending
     }
   })])]);
 };
