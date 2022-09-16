@@ -39,6 +39,11 @@ export default {
                     lable: 'Blog'
                 },
 
+                {
+                    name: 'contact',
+                    lable: 'ContactUs'
+                },
+
             ],
         };    
     }
